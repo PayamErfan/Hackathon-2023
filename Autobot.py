@@ -34,7 +34,8 @@ def main():
             user_input = ""
 
     # Store the chat history in a hidden Streamlit widget to preserve state
-    st.write(bot_response)
+            if bot_response:
+                st.write(bot_response)
 
 st.markdown(
         """
