@@ -5,11 +5,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatMessagePromptTemplate, SystemMessagePromptTemplate, AIMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 import streamlit as st
-
+import os
 REDIS_URL = 'redis://localhost:6379'
 
 redis_store = Redis.from_existing_index(OpenAIEmbeddings(client=None, 
-                                                         openai_api_key='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'),index_name='WebMD', redis_url = REDIS_URL)
+                                                         openai_api_key=os.environ['OPEN_AI_KEY']),index_name='WebMD', redis_url = REDIS_URL)
 
 def get_augmented_prompt(user_input: str) -> str:
     probable_diseases = redis_store.similarity_search(user_input, k = 4)
@@ -24,6 +24,6 @@ def get_gpt_answer(user_input: str) -> str:
         SystemMessage(content='You are a helpful assistant that helps diagnose diseases'),
         HumanMessage(content = prompt)
     ]
-    chat = ChatOpenAI(temperature=0, model = 'gpt-4', openai_api_key='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')
+    chat = ChatOpenAI(temperature=0, model = 'gpt-4', openai_api_key=os.environ['OPEN_AI_KEY'])
     ai_response = chat(messages=messages)
     return ai_response.content
