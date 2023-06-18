@@ -4,11 +4,13 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatMessagePromptTemplate, SystemMessagePromptTemplate, AIMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
+import streamlit as st
+
 REDIS_URL = 'redis://localhost:6379'
 
 redis_store = Redis.from_existing_index(OpenAIEmbeddings(client=None, 
                                                          openai_api_key='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'),index_name='WebMD', redis_url = REDIS_URL)
-
+@st.cache_data(show_spinner='Performing Diagnoses')
 def get_augmented_prompt(user_input: str) -> str:
     probable_diseases = redis_store.similarity_search(user_input, k = 4)
     prompt =f""" Given the following symptoms {user_input}, which one of the following 5 diseases could the patient be suffering from\n'

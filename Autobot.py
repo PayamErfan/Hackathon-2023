@@ -17,7 +17,7 @@ def main():
             st.text_area("Bot", value=message["text"], key=message["timestamp"], height=80)
 
     # User input area
-    user_input = st.text_input("Enter your symptoms")
+    user_input = st.text_input("Enter your symptoms and family history")
 
     if st.button("Send"):
         if user_input.strip() != "":
@@ -34,7 +34,7 @@ def main():
             user_input = ""
 
     # Store the chat history in a hidden Streamlit widget to preserve state
-    st.write(chat_history, key="chat_history")
+    st.write(bot_response)
 
 st.markdown(
         """
